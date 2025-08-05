@@ -1,75 +1,65 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import ActivityTabs from "@/components/ActivityTabs";
+import { images } from "@/constants/images";
+import CharSheet from "@/screens/CharSheet";
+import Inventory from "@/screens/Inventory";
+import Spells from "@/screens/Spells";
+import { useState } from "react";
+import { Image, ScrollView, Text, View } from "react-native";
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+const Index = () => {
+  const [activityTabs, setActivityTabs] = useState("sheet");
 
-export default function HomeScreen() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
-  );
-}
+    <View className="flex-1">
+      <Image source={images.bg} className="absolute w-full h-full z-0" resizeMode="cover"/>
 
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
+      <ScrollView
+        className="flex-1 px-5"
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          minHeight: "100%",
+          paddingBottom: 80,
+        }}
+      >
+        {/* Хедер */}
+        <View className="flex flex-col justify-center items-center ">
+          {/* Имя и уровень */}
+          <View className="flex mt-20 mb-4">
+            <Text className="text-4xl text-white font-bold text-center">
+              TryHarder
+            </Text>
+            <Text className="text-2xl text-white font-bold">
+              9 lvl | Barbarian
+            </Text>
+          </View>
+          {/* Кнопки всерху */}
+          <View className="flex flex-row items-center w-full bg-bgColor rounded-2xl mb-2">
+            <ActivityTabs
+              title="Character sheet"
+              onPress={() => setActivityTabs("sheet")}
+              isActive={activityTabs === "sheet"}
+            />
+            <ActivityTabs
+              title="Inventory"
+              onPress={() => setActivityTabs("inventory")}
+              isActive={activityTabs === "inventory"}
+            />
+            <ActivityTabs
+              title="Spells"
+              onPress={() => setActivityTabs("spells")}
+              isActive={activityTabs === "spells"}
+            />
+          </View>
+        </View>
+
+        {activityTabs === "sheet" && <CharSheet />}
+
+        {activityTabs === "inventory" && <Inventory />}
+
+        {activityTabs === "spells" && <Spells />}
+      </ScrollView>
+    </View>
+  );
+};
+
+export default Index;
